@@ -35,5 +35,7 @@
     "webpack": "^4.41.2",
     "webpack-node-externals": "^1.7.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "reflect-metadata": "^0.1.13"
+  }
 }

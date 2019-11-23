@@ -1,14 +1,24 @@
-import { GatewayEvent } from '@modules/types'
-import { APIGatewayProxyResult, Context } from 'aws-lambda'
-import { logger } from '@modules/module'
+import { APIGatewayEvent } from 'aws-lambda'
+import 'reflect-metadata'
+import { IHandler } from './BasaeHandler'
+import { response } from './method-decorators/response'
+import { gatewayEvent } from './parameter-decorators/body'
 
-export const handler = async (
-  event: GatewayEvent<{}>,
-  _: Context,
-): Promise<APIGatewayProxyResult> => {
-  logger.info('main.handler')
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ event }),
+type Result = {
+  hello: string
+}
+
+class Handler implements IHandler<Result> {
+  @response()
+  async execute(@gatewayEvent event: APIGatewayEvent, _) {
+    console.log({ [typeof event.body]: event.body })
+
+    return {
+      hello: 'hello',
+      something: 'test',
+    }
   }
 }
+
+// if assign new Handler().execute directly, `this` would be undefined in Handler class
+export const handler = new Handler().execute
