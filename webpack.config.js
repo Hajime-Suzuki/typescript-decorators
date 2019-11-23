@@ -9,9 +9,6 @@ module.exports = {
   entry: slsw.lib.entries,
   resolve: {
     extensions: ['.json', '.ts'],
-    alias: {
-      '@modules': path.resolve(__dirname, './src/modules'),
-    },
   },
   output: {
     libraryTarget: 'commonjs',

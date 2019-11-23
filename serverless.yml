@@ -1,4 +1,4 @@
-service: my-service
+service: typescript-decorator
 
 functions: ${file(./resources/functions.yml)}
 resources: ${file(./resources/resources.yml)}
