@@ -6,11 +6,11 @@ import { pathParamsKey } from '../parameter-decorators/path-params'
 // this could be done in BaseHandler class
 
 export function response(status = 200) {
-  return function(target: any, propertyName: string, propertyDescriptor: PropertyDescriptor) {
+  return function(target: any, methodName: string, propertyDescriptor: PropertyDescriptor) {
     const originalMethod = propertyDescriptor.value
 
     const decoratedMethod = async function(this: any, ...args: any[]) {
-      const decoratedArgs = decorateArgs(target, propertyName, args)
+      const decoratedArgs = decorateArgs(target, methodName, args)
       try {
         const res = await originalMethod.apply(this, decoratedArgs)
         return {
