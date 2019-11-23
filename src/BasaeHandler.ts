@@ -1,5 +1,6 @@
-import { APIGatewayEvent, Context } from 'aws-lambda'
+import { Context } from 'aws-lambda'
+import { DecodedGatewayEvent } from './types'
 
 export interface IHandler<TReturn> {
-  execute(event: APIGatewayEvent, context: Context): Promise<TReturn>
+  execute(event: DecodedGatewayEvent<any, any>, context: Context, ...any: any[]): Promise<TReturn>
 }

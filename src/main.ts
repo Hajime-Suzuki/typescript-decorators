@@ -1,21 +1,36 @@
-import { APIGatewayEvent } from 'aws-lambda'
-import 'reflect-metadata'
 import { IHandler } from './BasaeHandler'
 import { response } from './method-decorators/response'
-import { gatewayEvent } from './parameter-decorators/body'
+import { GatewayEvent } from './parameter-decorators/gateway-event'
+import { Params } from './parameter-decorators/path-params'
+import { DecodedGatewayEvent } from './types'
+import { Context } from 'vm'
 
 type Result = {
   hello: string
 }
 
+type Body = {
+  key1: string
+  key2: string
+}
+
+type PathParams = {
+  id: string
+}
+
 class Handler implements IHandler<Result> {
   @response()
-  async execute(@gatewayEvent event: APIGatewayEvent, _) {
+  async execute(
+    @GatewayEvent event: DecodedGatewayEvent<Body, 'id'>,
+    context: Context,
+    @Params params: PathParams,
+  ) {
     console.log({ [typeof event.body]: event.body })
-
+    console.log(params)
     return {
       hello: 'hello',
-      something: 'test',
+      body: event.body.key1,
+      params,
     }
   }
 }

@@ -2,5 +2,5 @@ main:
   handler: src/main.handler
   events:
     - http:
-        path: /
+        path: /{id}
         method: post

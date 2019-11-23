@@ -1,6 +1,5 @@
-export const gatewayEventKey = Symbol('decoded')
-
-export function gatewayEvent(target: any, propertyName: string, parameterIndex: number) {
+export const gatewayEventKey = Symbol('gatewayEvent')
+export function GatewayEvent(target: any, propertyName: string, parameterIndex: number) {
   const paramsWithDecodeDecorator: number[] =
     Reflect.getOwnMetadata(gatewayEventKey, target, propertyName) || []
 

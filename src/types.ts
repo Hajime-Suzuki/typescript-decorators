@@ -4,7 +4,7 @@ export type Maybe<T> = T | undefined | null
 
 export type Overwrite<TType, TNewType> = Omit<TType, keyof TNewType> & TNewType
 
-export type GatewayEvent<
+export type DecodedGatewayEvent<
   TBody extends Record<string, any> | null,
   TParamsKey extends string | null = null
 > = Overwrite<
