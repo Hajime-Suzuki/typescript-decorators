@@ -9,6 +9,8 @@
     "deploy:dev": "yarn sls deploy --stage dev",
     "deploy:prod": "yarn sls deploy --stage prod",
     "dev": "yarn sls offline start",
+    "watch:decorator": "URL_PATH=decorator nodemon ./request.js --watch .webpack/service/src/",
+    "watch:pipe": "URL_PATH=pipe nodemon ./request.js --watch .webpack/service/src/",
     "test:watch": "yarn jest --watch --runInBand"
   },
   "devDependencies": {
@@ -24,6 +26,7 @@
     "eslint-plugin-prettier": "^3.1.1",
     "fork-ts-checker-webpack-plugin": "^2.0.0",
     "jest": "^24.9.0",
+    "nodemon": "^2.0.1",
     "prettier": "^1.18.2",
     "serverless": "^1.55.1",
     "serverless-offline": "^5.12.0",
@@ -36,6 +39,7 @@
     "webpack-node-externals": "^1.7.2"
   },
   "dependencies": {
+    "axios": "^0.19.0",
     "reflect-metadata": "^0.1.13"
   }
 }

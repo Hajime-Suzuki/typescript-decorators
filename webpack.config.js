@@ -32,4 +32,5 @@ module.exports = {
       eslint: true,
     }),
   ],
+  stats: 'errors-only',
 }

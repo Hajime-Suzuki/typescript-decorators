@@ -1,9 +1,8 @@
-import { IHandler } from './BasaeHandler'
+import { Context } from 'vm'
+import { DecodedGatewayEvent } from '../types'
 import { response } from './method-decorators/response'
 import { GatewayEvent } from './parameter-decorators/gateway-event'
 import { Params } from './parameter-decorators/path-params'
-import { DecodedGatewayEvent } from './types'
-import { Context } from 'vm'
 
 type Result = {
   hello: string
@@ -16,6 +15,10 @@ type Body = {
 
 type PathParams = {
   id: string
+}
+
+interface IHandler<TReturn> {
+  execute(event: DecodedGatewayEvent<any, any>, context: Context, ...any: any[]): Promise<TReturn>
 }
 
 class Handler implements IHandler<Result> {

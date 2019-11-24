@@ -1,6 +1,13 @@
 main:
-  handler: src/main.handler
+  handler: src/decorator-example/main.handler
   events:
     - http:
-        path: /{id}
+        path: /decorator/{id}
+        method: post
+
+main-functional:
+  handler: src/functional-example/main.handler
+  events:
+    - http:
+        path: /pipe/{id}
         method: post
