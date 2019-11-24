@@ -8,7 +8,7 @@ Here are some examples decorator examples to make these process readable. To com
 
 - `yarn install` to install all dependencies
 - `yarn dev` to run serverless offline.
-- ``
+- `yarn watch:decorator` or `yarn watch:pipe`. When you change a change, your lambda function is called.
 
 #### @Method Decorators
 

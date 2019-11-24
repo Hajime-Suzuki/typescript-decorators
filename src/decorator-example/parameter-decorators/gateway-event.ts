@@ -1,9 +1,4 @@
-export const gatewayEventKey = Symbol('gatewayEvent')
-export function GatewayEvent(target: any, propertyName: string, parameterIndex: number) {
-  const paramsWithDecodeDecorator: number[] =
-    Reflect.getOwnMetadata(gatewayEventKey, target, propertyName) || []
+import { registerParameterDecorator } from '../register-parameter-decorator'
 
-  paramsWithDecodeDecorator.push(parameterIndex)
-
-  Reflect.defineMetadata(gatewayEventKey, paramsWithDecodeDecorator, target, propertyName)
-}
+export const gatewayBodyKey = 'body'
+export const GatewayBody = registerParameterDecorator(gatewayBodyKey)

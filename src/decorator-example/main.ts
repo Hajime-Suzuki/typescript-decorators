@@ -1,8 +1,7 @@
-import { Context } from 'vm'
-import { DecodedGatewayEvent } from '../types'
 import { response } from './method-decorators/response'
-import { GatewayEvent } from './parameter-decorators/gateway-event'
+import { GatewayBody } from './parameter-decorators/gateway-event'
 import { Params } from './parameter-decorators/path-params'
+import { Query } from './parameter-decorators/query-string'
 
 type Result = {
   hello: string
@@ -17,23 +16,26 @@ type PathParams = {
   id: string
 }
 
+type Query = {
+  someQuery: string
+  'another-value': string
+}
+
 interface IHandler<TReturn> {
-  execute(event: DecodedGatewayEvent<any, any>, context: Context, ...any: any[]): Promise<TReturn>
+  execute(...args: any[]): Promise<TReturn>
 }
 
 class Handler implements IHandler<Result> {
   @response()
-  async execute(
-    @GatewayEvent event: DecodedGatewayEvent<Body, 'id'>,
-    context: Context,
-    @Params params: PathParams,
-  ) {
-    console.log({ [typeof event.body]: event.body })
-    console.log(params)
+  async execute(@Params params: PathParams, @GatewayBody body: Body, @Query query: Query) {
+    console.log({ [typeof body]: body })
+    console.log({ params, query })
+
     return {
       hello: 'hello',
-      body: event.body.key1,
+      body,
       params,
+      query,
     }
   }
 }

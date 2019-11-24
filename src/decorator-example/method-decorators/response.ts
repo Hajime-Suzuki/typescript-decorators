@@ -1,18 +1,22 @@
-import { gatewayEventKey } from '../parameter-decorators/gateway-event'
-import { APIGatewayEvent } from 'aws-lambda'
+import { APIGatewayEvent, Context } from 'aws-lambda'
 import 'reflect-metadata'
+import { decorateArgs } from '../get-meta-key'
+import { gatewayBodyKey } from '../parameter-decorators/gateway-event'
 import { pathParamsKey } from '../parameter-decorators/path-params'
-
-// this could be done in BaseHandler class
+import { queryParamsKey } from '../parameter-decorators/query-string'
 
 export function response(status = 200) {
   return function(target: any, methodName: string, propertyDescriptor: PropertyDescriptor) {
     const originalMethod = propertyDescriptor.value
 
-    const decoratedMethod = async function(this: any, ...args: any[]) {
-      const decoratedArgs = decorateArgs(target, methodName, args)
+    const decoratedMethod = async function(this: any, ...args: [APIGatewayEvent, Context]) {
+      const copiedArgs: any = deepCopy(args)
+
+      decodeBody(copiedArgs)
+      const decoratedKeys = [gatewayBodyKey, pathParamsKey, queryParamsKey]
+      decorateArgs(target, methodName, copiedArgs, decoratedKeys)
       try {
-        const res = await originalMethod.apply(this, decoratedArgs)
+        const res = await originalMethod.apply(this, copiedArgs)
         return {
           statusCode: status,
           body: JSON.stringify(res),
@@ -29,27 +33,10 @@ export function response(status = 200) {
   }
 }
 
-const decorateArgs = (target: any, propertyName: string, args: any) => {
-  const gatewayEventIndexes: number[] = Reflect.getOwnMetadata(
-    gatewayEventKey,
-    target,
-    propertyName,
-  )
-
-  const pathParamsIndexes: number[] = Reflect.getOwnMetadata(pathParamsKey, target, propertyName)
-
-  const event = args[gatewayEventIndexes[0]] // assume there is only one @gatewayEvent decorator in params
-
-  event.body = decodeGatewayBody(event)
-  args[pathParamsIndexes[0]] = getPathParams(event) // also assume there is only one @pathParams decorator in params
-
-  return args
+const deepCopy = (data: any) => {
+  return JSON.parse(JSON.stringify(data))
 }
 
-const decodeGatewayBody = (event: APIGatewayEvent) => {
-  return event.body ? JSON.parse(event.body) : event.body
-}
-
-const getPathParams = (event: APIGatewayEvent) => {
-  return event.pathParameters
+const decodeBody = ([event]: [APIGatewayEvent, Context]) => {
+  event.body = event.body ? JSON.parse(event.body) : null
 }
