@@ -25,7 +25,7 @@ interface IHandler<TReturn> {
   execute(...args: any[]): Promise<TReturn>
 }
 
-class Handler implements IHandler<Result> {
+export class Handler implements IHandler<Result> {
   @response()
   async execute(@Params params: PathParams, @GatewayBody body: Body, @Query query: Query) {
     console.log({ [typeof body]: body })

@@ -1,9 +1,8 @@
 import { APIGatewayEvent, Context } from 'aws-lambda'
 import 'reflect-metadata'
-import { decorateArgs } from '../get-meta-key'
 import { gatewayBodyKey } from '../parameter-decorators/gateway-event'
 import { pathParamsKey } from '../parameter-decorators/path-params'
-import { queryParamsKey } from '../parameter-decorators/query-string'
+import { decorateArgs } from '../decorate-args'
 
 export function response(status = 200) {
   return function(target: any, methodName: string, propertyDescriptor: PropertyDescriptor) {
@@ -13,8 +12,9 @@ export function response(status = 200) {
       const copiedArgs: any = deepCopy(args)
 
       decodeBody(copiedArgs)
-      const decoratedKeys = [gatewayBodyKey, pathParamsKey, queryParamsKey]
-      decorateArgs(target, methodName, copiedArgs, decoratedKeys)
+      const keysToDecorate = [gatewayBodyKey, pathParamsKey]
+      decorateArgs(target, methodName, copiedArgs, keysToDecorate)
+
       try {
         const res = await originalMethod.apply(this, copiedArgs)
         return {
@@ -33,9 +33,7 @@ export function response(status = 200) {
   }
 }
 
-const deepCopy = (data: any) => {
-  return JSON.parse(JSON.stringify(data))
-}
+const deepCopy = (data: any) => JSON.parse(JSON.stringify(data)) // keep this simple by JSON
 
 const decodeBody = ([event]: [APIGatewayEvent, Context]) => {
   event.body = event.body ? JSON.parse(event.body) : null
